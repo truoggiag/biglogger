@@ -1,0 +1,46 @@
+﻿apt-get install mysql-server -y
+apt-get install apache2 -y
+sudo apt-get install software-properties-common -y
+sudo add-apt-repository ppa:ondrej/php
+apt-get update
+apt-get install php7.1 -y
+apt-get install php7.1-cli php7.1-common php7.1-json php7.1-opcache php7.1-mysql php7.1-mbstring php7.1-mcrypt php7.1-zip php7.1-fpm php7.1-intl php7.1-curl php7.1-gd php7.1-xml php7.1-xsl -y
+a2enmod php7.1
+php -v
+service apache2 restart
+wget http://downloads.datastax.com/cpp-driver/ubuntu/18.04/dependencies/libuv/v1.28.0/libuv1_1.28.0-1_amd64.deb
+dpkg -i libuv1_1.28.0-1_amd64.deb
+wget http://downloads.datastax.com/cpp-driver/ubuntu/18.04/dependencies/libuv/v1.28.0/libuv1-dev_1.28.0-1_amd64.deb
+dpkg -i libuv1-dev_1.28.0-1_amd64.deb
+apt-get install libssl-dev -y
+apt-get install libgmp-dev -y
+apt-get install php-pear -y
+wget http://downloads.datastax.com/cpp-driver/ubuntu/18.04/cassandra/v2.12.0/cassandra-cpp-driver_2.12.0-1_amd64.deb
+dpkg -i cassandra-cpp-driver_2.12.0-1_amd64.deb
+wget http://downloads.datastax.com/cpp-driver/ubuntu/18.04/cassandra/v2.12.0/cassandra-cpp-driver-dev_2.12.0-1_amd64.deb
+dpkg -i cassandra-cpp-driver-dev_2.12.0-1_amd64.deb
+apt-get install php7.1-dev -y
+sudo apt-get install openjdk-8-jre -y
+sudo apt-get install python2.7 -y
+echo "deb http://www.apache.org/dist/cassandra/debian 311x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+sudo apt-get install curl -y
+curl https://www.apache.org/dist/cassandra/KEYS | sudo apt-key add -
+sudo apt-get update -y
+sudo apt-get install cassandra -y
+sudo apt-get install python-pip -y
+pip install cassandra-driver ( mất khoảng 10p)
+php -r "echo php_ini_loaded_file();"
+php -i | grep -A 10 "^cassandra$"
+/etc/init.d/apache2 restart
+pecl channel-update pecl.php.net
+pecl install cassandra
+echo "extension=cassandra.so" >> /etc/php/7.1/mods-available/cassandra.ini
+echo "extension=cassandra.so" >> /etc/php/7.1/apache2/php.ini
+git clone https://github.com/datastax/php-driver.git
+cd php-driver
+git submodule update --init
+cd ext
+./install.sh
+echo -e "; DataStax PHP Driver\nextension=cassandra.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+a2enmod rewrite
+systemctl restart apache2
